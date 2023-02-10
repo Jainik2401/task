@@ -1,0 +1,33 @@
+body {
+    background-image: url("bg.webp");
+    background-repeat: no-repeat;
+}
+
+h2,
+h1 {
+    text-align: center;
+    color: blanchedalmond;
+}
+
+.heading {
+    margin-top: 20px;
+    overflow: hidden;
+    background-color: #ad3662;
+    padding: 20px 10px;
+    margin-bottom: 20px;
+}
+
+.adde {
+    display: flex;
+    justify-content: center;
+}
+
+.liste {
+    display: flex;
+    justify-content: center;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+}

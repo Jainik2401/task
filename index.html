@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>crud</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+    <div class="heading">
+        <h1>Event Mangement System</h1>
+    </div>
+    <div class="adde">
+        <!-- Model start -->
+        <div class="bs-example">
+            <button type="button" id="ad" class="btn btn-lg btn-primary">Add New Event</button>
+            <div id="addevent" class="modal fade" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <!-- click button to add new event (on model dialog box) -->
+                            <h5 class="modal-title" id="hadd">Add New Event</h5>
+                            <h5 class="modal-title" id="hup" style="display: none;">Update Event</h5>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- for the input of ArtistName and CityName of Event  -->
+                            <label for="">Artist Name</label>
+                            <input type="text" name="Name" id="eName" value="" /><br>
+                            <label for="">City Name</label>
+                            <input type="text" name="City" id="eCity" value="" />
+                        </div>
+                        <div class="modal-footer">
+                            <!-- Add , Update , clear button for event -->
+                            <!-- data-dismiss="modal" used to close the modal if you click on any button.   -->
+                            <button type="button" id='btnAdd' class="btn btn-primary" data-dismiss="modal">Add</button>
+                            <button type='button' id='btnUpdate' class="btn btn-primary" style="display: none;" data-dismiss="modal">Update</button>
+                            <button type="button" id='btnClear' class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Model end -->
+    </div>
+    <div class="liste">
+        <div class="jk">
+            <table id="etbl" class="table">
+                <th>
+                    <tr>
+                        <!-- for the list of event (table format) -->
+                        <th>ID</th>
+                        <th>Artist Name</th>
+                        <th>City Name</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </th>
+                <!-- dynamically print the data in to table  -->
+                <td></td>
+            </table>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+
+            //open the model on click of add event button
+            $("#ad").click(function() {
+                $("#addevent").modal('show');
+            });
+
+            var eId = 1; //for the event id 
+
+            //on click of add button into model (insert the data)
+            $("#btnAdd").on('click', function() {
+                //get and sets the value of event id & name & city
+                var ename, ecity, eid;
+                eid = eId++; //auto increment of  event id
+                ename = $("#eName").val();
+                ecity = $("#eCity").val();
+
+                var edit = "<a class='edit' href='JavaScript:void(0);' >Edit</a>";
+                var del = "<a class='delete' href='JavaScript:void(0);'>Delete</a>";
+
+                // validation of EventName(if) and eventCity(else if) and add data into table(else)
+                if (ename == "") {
+                    alert("Name required!");
+                } else if (ecity == "") {
+                    alert("City required!");
+                } else {
+                    var table = "<tr><td>" + eid + "</td><td>" + ename + "</td><td>" + ecity + "</td><td>" + edit + "</td><td>" + del + "</td></tr>";
+                    $("#etbl").append(table);
+                }
+                // calling clear funtion to clear model
+                Clear();
+            });
+            //on click of update  open model and update the data 
+            $("#btnUpdate").on('click', function() {
+                var ename, ecity;
+
+                ename = $("#eName").val();
+                ecity = $("#eCity").val();
+
+                //hide update button and replace with add button
+                $('#btnAdd').show();
+                $('#btnUpdate').hide();
+                //hide model title update and replace with add
+                $('#hup').hide();
+                $('#hadd').show();
+                Clear();
+            });
+            //get the table id(etbl) to on click of edit button
+            $("#etbl").on('click', '.edit', function() {
+                $("#addevent").modal('show'); //on update time open model
+                //get the value to update
+
+                var row = $(this).closest('tr');
+                var td = $(row).find("td");
+                $('#eId').val($(td).eq(0).html());
+                $('#eName').val($(td).eq(1).html());
+                $('#eCity').val($(td).eq(2).html());
+                //hide add button and replace with update button
+                $('#btnAdd').hide();
+                $('#btnUpdate').show();
+                //hide model title add and replace with update
+                $('#hup').show();
+                $('#hadd').hide();
+
+
+            });
+            //get the table id(etbl) to on click of delete button
+            //if part  this is  selecting an event data and open confirmation popup and delete the data
+            // else part stops the delete action of an data   (preventDefault)
+            $("#etbl").on('click', '.delete', function() {
+                if (confirm("Are you sure ?")) {
+                    $(this).closest('tr').remove();
+                } else {
+                    e.preventDefault();
+                }
+            });
+            //clear the model on click of cancel button in model 
+            $("#btnClear").on('click', function() {
+                $("#eName").val("");
+                $("#eCity").val("");
+            });
+            //clear the model on click of add button in model 
+            function Clear() {
+                $("#eName").val("");
+                $("#eCity").val("");
+            }
+
+
+        });
+    </script>
+</body>
+
+</html>
